@@ -36,11 +36,11 @@ jobs:
         if: steps.cache-venv.outputs.cache-hit != 'true'
 
       - name: build
-        run: source venv/bin/activate && python setup.py bdist_wheel
+        run: venv/bin/python setup.py bdist_wheel
 
       - name: deploy
         env:
           USERNAME: ${{ secrets.USERNAME }}
           PASSWORD: ${{ secrets.PASSWORD }}
           VERSION: ${{ steps.vars.outputs.tag }}
-        run: source venv/bin/activate && twine upload -u $USERNAME -p $PASSWORD dist/consumer_framework-$VERSION-py3-none-any.whl
+        run: venv/bin/twine upload -u $USERNAME -p $PASSWORD dist/consumer_framework-$VERSION-py3-none-any.whl

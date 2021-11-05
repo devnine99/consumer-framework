@@ -1,0 +1,11 @@
+*.pyc
+*.db
+*~
+*.py.bak
+.idea
+.DS_Store
+
+/venv/
+/build/
+/dist/
+/*.egg-info/

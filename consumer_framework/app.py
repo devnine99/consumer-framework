@@ -32,7 +32,10 @@ class ConsumerFramework:
             if not self.validate_class(event_class):
                 logger.warning(f'\'{event_class.__name__}\' is not Event class')
                 continue
-            self.event_classes_registry.update({event_class.key: event_class for event_class in event_classes})
+            self.event_classes_registry.update({
+                event_class.key: event_class
+                for event_class in event_classes
+            })
 
     def get_event(self, message):
         try:

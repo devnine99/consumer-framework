@@ -35,10 +35,10 @@ jobs:
         run: python -m venv venv && source venv/bin/activate && pip3 install -r requirements.txt
         if: steps.cache-venv.outputs.cache-hit != 'true'
 
-      - name: build
+      - name: Build
         run: venv/bin/python setup.py bdist_wheel
 
-      - name: deploy
+      - name: Deploy
         env:
           USERNAME: ${{ secrets.USERNAME }}
           PASSWORD: ${{ secrets.PASSWORD }}

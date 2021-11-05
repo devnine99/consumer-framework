@@ -11,4 +11,9 @@ setup(
     python_requires='>=3',
     install_requires=['kafka-python>=2'],
     packages=['consumer_framework'],
+    entry_points={
+        'console_scripts': [
+            'consumer = consumer_framework.__main__:main',
+        ],
+    }
 )

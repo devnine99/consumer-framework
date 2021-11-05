@@ -22,3 +22,7 @@ def main():
     for m in mod.__dir__():
         if isinstance(getattr(mod, m), ConsumerFramework):
             sys.exit(getattr(mod, m).run())
+
+
+if __name__ == '__main__':
+    main()

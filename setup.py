@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='consumer-framework',
-    version='0.0.7',
+    version='0.0.8',
     description='Consumer Framework',
     author='devnine99',
     author_email='devnine99@gmail.com',

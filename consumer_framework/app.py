@@ -3,7 +3,7 @@ from kafka import KafkaConsumer
 from consumer_framework.event import Event, UnDefinedEvent
 
 
-class Consumer:
+class ConsumerFramework:
     topic: str
     configs: dict
     event_classes_registry: dict = {}

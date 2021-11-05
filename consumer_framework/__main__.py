@@ -1,7 +1,7 @@
 import sys
 import importlib.util
 
-from consumer_framework.app import Consumer
+from consumer_framework.app import ConsumerFramework
 
 
 def main():
@@ -14,11 +14,11 @@ def main():
         return
 
     module_name = 'consumer_framework'
-    module_path = sys.argv[0].replace('consumer', f'{app.replace(".", "/")}.py')
+    module_path = '/'.join(sys.argv[0].split('/')[:-1]) + f'/{app.replace(".", "/")}.py'
 
     spec = importlib.util.spec_from_file_location(module_name, module_path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     for m in mod.__dir__():
-        if isinstance(getattr(mod, m), Consumer):
+        if isinstance(getattr(mod, m), ConsumerFramework):
             sys.exit(getattr(mod, m).run())

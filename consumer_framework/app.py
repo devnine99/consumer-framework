@@ -1,6 +1,10 @@
+import logging
+
 from kafka import KafkaConsumer
 
 from consumer_framework.event import Event, UnDefinedEvent
+
+logger = logging.getLogger(__name__)
 
 
 class ConsumerFramework:
@@ -13,9 +17,9 @@ class ConsumerFramework:
         self.configs = configs or {}
 
     def run(self):
-        print('registered events:')
-        for event_class in self.event_classes_registry:
-            print(f'- {event_class}')
+        logger.info('Registered Events:')
+        for event_class in self.event_classes_registry.keys():
+            logger.info(f'- {event_class}')
 
         for message in KafkaConsumer(self.topic, **self.configs):
             self.get_event(message).consume()
@@ -26,7 +30,7 @@ class ConsumerFramework:
     def discover_event(self, *event_classes):
         for event_class in event_classes:
             if not self.validate_class(event_class):
-                print(f'\'{event_class.__name__}\' is not Event class')
+                logger.warning(f'\'{event_class.__name__}\' is not Event class')
                 continue
             self.event_classes_registry.update({event_class.key: event_class for event_class in event_classes})
 

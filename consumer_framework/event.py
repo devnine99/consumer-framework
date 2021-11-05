@@ -1,4 +1,7 @@
 import abc
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class Event(abc.ABC):
@@ -14,4 +17,4 @@ class Event(abc.ABC):
 
 class UnDefinedEvent(Event):
     def consume(self):
-        print(f'UnDefinedEvent: \'{self.message.key}\'')
+        logger.warning(f'this event is undefined event. \'{self.message.key}\'')

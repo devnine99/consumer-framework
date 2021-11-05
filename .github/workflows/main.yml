@@ -39,4 +39,4 @@ jobs:
           USERNAME: ${{ secrets.AWS_ACCESS_KEY_ID }}
           PASSWORD: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           VERSION: ${{ steps.vars.outputs.tag }}
-        run: twine upload -u $USERNAME -p $PASSWORD dist/consumer_framework-$VERSION-py3-none-any.whl
+        run: source venv/bin/activate && twine upload -u $USERNAME -p $PASSWORD dist/consumer_framework-$VERSION-py3-none-any.whl

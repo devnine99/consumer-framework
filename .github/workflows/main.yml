@@ -36,7 +36,7 @@ jobs:
 
       - name: deploy
         env:
-          USERNAME: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          PASSWORD: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          USERNAME: ${{ secrets.USERNAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
           VERSION: ${{ steps.vars.outputs.tag }}
         run: source venv/bin/activate && twine upload -u $USERNAME -p $PASSWORD dist/consumer_framework-$VERSION-py3-none-any.whl

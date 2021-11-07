@@ -19,27 +19,31 @@ class ConsumerFramework:
 
     def run(self):
         for message in KafkaConsumer(*self._event_registry.keys(), **self._configs):
-            self._get_event(message.topic, message.keys()).consume(message)
-
-    def config(self, **configs):
-        self._configs.update(configs)
+            self._get_event(message.topic, message.key).consume(message)
 
     def _register_topic(self, topics):
         for topic in topics:
             self._event_registry[topic] = {}
 
+    def config(self, **configs):
+        self._configs.update(configs)
+
     def event(self, *, topic, key, schema=None):
         def register_event(consume):
-            try:
-                self._event_registry[topic][key] = Event(topic, key, consume, schema)
-            except KeyError:
-                raise NotRegisteredTopic(topic)
-
-            @wraps(consume)
-            def wrapped(*args, **kwargs):
-                pass
-            return wrapped
+            return self._register_event(topic, key, consume, schema)
         return register_event
+
+    def _register_event(self, topic, key, consume, schema):
+        try:
+            self._event_registry[topic][key] = Event(topic, key, consume, schema)
+        except KeyError:
+            raise NotRegisteredTopic(topic)
+
+        @wraps(consume)
+        def wrapped(*args, **kwargs):
+            pass
+
+        return wrapped
 
     def _get_event(self, topic, key):
         try:

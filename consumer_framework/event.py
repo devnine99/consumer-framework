@@ -1,4 +1,3 @@
-import abc
 import logging
 
 from consumer_framework.exceptions import ValidationError
@@ -17,7 +16,7 @@ class Event:
         self._key = key
         self._consume = consume
         self._schema = schema
-        logger.info(f'Registed Event: {self._topic}, {self._key}')
+        logger.info(f'Registered Event: {self._topic}, {self._key}')
 
     def consume(self, message):
         self._validate()

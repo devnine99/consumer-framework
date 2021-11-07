@@ -1,3 +1,3 @@
-from app import ConsumerFramework
+from .app import ConsumerFramework
 
 __all__ = ['ConsumerFramework']

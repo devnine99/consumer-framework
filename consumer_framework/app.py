@@ -1,10 +1,9 @@
 import logging
-from functools import wraps
 
 from kafka import KafkaConsumer
 
-from consumer_framework.event import Event, UnDefinedEvent
-from consumer_framework.exceptions import NotRegisteredTopic
+from consumer_framework.events import UnDefinedEvent
+from consumer_framework.routers import Router
 
 logger = logging.getLogger(__name__)
 
@@ -12,38 +11,34 @@ logger = logging.getLogger(__name__)
 class ConsumerFramework:
     _configs: dict
     _event_registry: dict = {}
+    _default_router = Router()
+    _routers = [_default_router]
 
-    def __init__(self, *topics, **configs):
-        self._register_topic(topics)
+    def __init__(self, **configs):
         self._configs = configs or {}
 
     def run(self):
+        self._register_router()
         for message in KafkaConsumer(*self._event_registry.keys(), **self._configs):
             self._get_event(message.topic, message.key).consume(message)
-
-    def _register_topic(self, topics):
-        for topic in topics:
-            self._event_registry[topic] = {}
 
     def config(self, **configs):
         self._configs.update(configs)
 
+    def include_router(self, router):
+        self._routers.append(router)
+
+    def _register_router(self):
+        for router in self._routers:
+            for topic, events in router.registry.items():
+                try:
+                    self._event_registry[topic].update(events)
+                except KeyError:
+                    self._event_registry[topic] = dict()
+                    self._event_registry[topic] = events
+
     def event(self, *, topic, key, schema=None):
-        def register_event(consume):
-            return self._register_event(topic, key, consume, schema)
-        return register_event
-
-    def _register_event(self, topic, key, consume, schema):
-        try:
-            self._event_registry[topic][key] = Event(topic, key, consume, schema)
-        except KeyError:
-            raise NotRegisteredTopic(topic)
-
-        @wraps(consume)
-        def wrapped(*args, **kwargs):
-            pass
-
-        return wrapped
+        return self._default_router.event(topic=topic, key=key, schema=schema)
 
     def _get_event(self, topic, key):
         try:

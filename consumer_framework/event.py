@@ -19,11 +19,11 @@ class Event:
         logger.info(f'Registered Event: {self._topic}, {self._key}')
 
     def consume(self, message):
-        self._validate()
+        self._validate(message)
         self._consume(message)
 
-    def _validate(self):
-        if self._schema:
+    def _validate(self, message):
+        if self._schema and not self._schema(message).is_valid():
             raise ValidationError()
 
 

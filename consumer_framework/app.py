@@ -1,50 +1,48 @@
 import logging
+from functools import wraps
 
 from kafka import KafkaConsumer
 
 from consumer_framework.event import Event, UnDefinedEvent
+from consumer_framework.exceptions import NotRegisteredTopic
 
 logger = logging.getLogger(__name__)
 
 
 class ConsumerFramework:
-    topic: str
-    configs: dict
-    event_classes_registry: dict = {}
+    _configs: dict
+    _event_registry: dict = {}
 
-    def __init__(self, topic, **configs):
-        self.topic = topic
-        self.configs = configs or {}
+    def __init__(self, *topics, **configs):
+        self._register_topic(topics)
+        self._configs = configs or {}
 
     def run(self):
-        logger.info('Registered Events:')
-        for event_class in self.event_classes_registry.keys():
-            logger.info(f'- {event_class}')
-
-        for message in KafkaConsumer(self.topic, **self.configs):
-            self.get_event(message).consume()
+        for message in KafkaConsumer(*self._event_registry.keys(), **self._configs):
+            self._get_event(message.topic, message.keys()).consume(message)
 
     def config(self, **configs):
-        self.configs.update(configs)
+        self._configs.update(configs)
 
-    def discover_event(self, *event_classes):
-        for event_class in event_classes:
-            if not self.validate_class(event_class):
-                logger.warning(f'\'{event_class.__name__}\' is not Event class')
-                continue
-            self.event_classes_registry.update({
-                event_class.key: event_class
-                for event_class in event_classes
-            })
+    def _register_topic(self, topics):
+        for topic in topics:
+            self._event_registry[topic] = {}
 
-    def get_event(self, message):
+    def event(self, *, topic, key, schema=None):
+        def register_event(consume):
+            try:
+                self._event_registry[topic][key] = Event(topic, key, consume, schema)
+            except KeyError:
+                raise NotRegisteredTopic(topic)
+
+            @wraps(consume)
+            def wrapped(*args, **kwargs):
+                pass
+            return wrapped
+        return register_event
+
+    def _get_event(self, topic, key):
         try:
-            return self.event_classes_registry[message.key](message)
+            return self._event_registry[topic][key]
         except KeyError:
-            return UnDefinedEvent(message)
-
-    @staticmethod
-    def validate_class(event_class):
-        if Event in event_class.mro():
-            return True
-        return False
+            return UnDefinedEvent(topic, key)

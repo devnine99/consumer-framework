@@ -1,6 +1,6 @@
 import logging
 
-from consumer_framework.exceptions import ValidationError
+from consumer_framework.exceptions import ValidationError, UndefinedEventError
 
 logger = logging.getLogger(__name__)
 

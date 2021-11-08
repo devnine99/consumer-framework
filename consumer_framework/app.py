@@ -32,12 +32,11 @@ class ConsumerFramework:
         self._routers.append(router)
 
     def _register_router(self):
-        for router in self._routers:
-            for topic, events in router.registry.items():
-                try:
-                    self._event_registry[topic].update(events)
-                except KeyError:
-                    self._event_registry[topic] = events
+        for topic, events in (router.registry.items() for router in self._routers):
+            try:
+                self._event_registry[topic].update(events)
+            except KeyError:
+                self._event_registry[topic] = events
 
     def _get_event(self, topic, key):
         try:

@@ -4,7 +4,7 @@ from consumer_framework.events import Event
 
 
 class Router:
-    registry = {}
+    registry: dict = {}
 
     def event(self, *, topic, key, schema=None):
         def register_event(consume):

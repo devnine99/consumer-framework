@@ -9,15 +9,22 @@ pip install consumer-framework
 ```
 # events.py
 from consumer_framework import ConsumerFramework
+from pydantic import BaseModel
 
 
 app = ConsumerFramework()
 app.config(**CONFIG)
 
 
-@app.event(topic='some_topic', key='some_key', schema=SomeSchema)
-def some_event(message):
-    print(message.topic, message.key, message.value) 
+class SomeSchema(BaseModel):
+    id: str
+    name: str
+    description: str
+
+
+@app.event(topic='some_topic', key='some_key')
+def some_event(data: SomeSchema):
+    print(data) 
 ```
 
 ## CONFIG

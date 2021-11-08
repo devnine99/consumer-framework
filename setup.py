@@ -13,7 +13,7 @@ setup(
     url='https://github.com/devnine99/consumer-framework',
     license='MIT',
     python_requires='>=3',
-    install_requires=['kafka-python>=2'],
+    install_requires=['kafka-python>=2', 'pydantic>=1.8'],
     packages=['consumer_framework'],
     entry_points={
         'console_scripts': [

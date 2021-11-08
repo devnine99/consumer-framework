@@ -11,8 +11,8 @@ logger = logging.getLogger(__name__)
 class ConsumerFramework:
     _configs: dict
     _event_registry: dict = {}
-    _default_router = Router()
-    _routers = [_default_router]
+    _router = Router()
+    _routers = [_router]
 
     def __init__(self, **configs):
         self._configs = configs or {}
@@ -26,7 +26,7 @@ class ConsumerFramework:
         self._configs.update(configs)
 
     def event(self, *, topic, key, schema=None):
-        return self._default_router.event(topic=topic, key=key, schema=schema)
+        return self._router.event(topic=topic, key=key, schema=schema)
 
     def include_router(self, router):
         self._routers.append(router)

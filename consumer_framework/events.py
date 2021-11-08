@@ -29,12 +29,14 @@ class Event:
 
     @staticmethod
     def _validate_args(consume):
-        param = signature(consume).parameters
-        if len(param) > 1:
+        params = signature(consume).parameters
+        if len(params) > 1:
             raise InvalidEventArgumentError()
-        if BaseModel not in list(param.values())[0].annotation.mro():
+        if len(params) == 0:
+            return None
+        if BaseModel not in list(params.values())[0].annotation.mro():
             raise InvalidEventArgumentError()
-        return list(param.values())[0].annotation
+        return list(params.values())[0].annotation
 
 
 class UndefinedEvent(Event):

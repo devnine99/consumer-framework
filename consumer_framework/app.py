@@ -2,7 +2,7 @@ import logging
 
 from kafka import KafkaConsumer
 
-from consumer_framework.events import UnDefinedEvent
+from consumer_framework.events import UndefinedEvent
 from consumer_framework.routers import Router
 
 logger = logging.getLogger(__name__)
@@ -43,4 +43,4 @@ class ConsumerFramework:
         try:
             return self._event_registry[topic][key]
         except KeyError:
-            return UnDefinedEvent(topic, key)
+            return UndefinedEvent(topic, key)

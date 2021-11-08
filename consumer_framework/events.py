@@ -27,6 +27,6 @@ class Event:
             raise ValidationError()
 
 
-class UnDefinedEvent(Event):
+class UndefinedEvent(Event):
     def consume(self, message):
         logger.warning(f'this event is undefined event. \'{self.message.key}\'')

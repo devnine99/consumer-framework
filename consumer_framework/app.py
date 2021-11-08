@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 class ConsumerFramework:
-    _configs: dict = {}
+    _configs: dict
     _event_registry: dict = {}
     _default_router = Router()
     _routers = [_default_router]

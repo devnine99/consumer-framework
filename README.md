@@ -5,7 +5,7 @@
 pip install consumer-framework
 ```
 
-## USE
+## EXAMPLE
 ```
 # events.py
 from consumer_framework import ConsumerFramework
@@ -20,8 +20,7 @@ def some_event(message):
 ```
 
 ## CONFIG
-```
-```
+https://kafka-python.readthedocs.io/en/master/apidoc/KafkaConsumer.html
 
 ## RUN
 ```

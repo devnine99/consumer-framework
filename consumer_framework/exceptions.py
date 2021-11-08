@@ -1,5 +1,5 @@
 class InvalidEventArgumentError(Exception):
-    def __init__(self, arg):
+    def __init__(self, arg=None):
         self.arg = arg
 
 

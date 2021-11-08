@@ -18,7 +18,7 @@ class ConsumerFramework:
         self._configs = configs or {}
 
     def run(self):
-        self._register_router()
+        self._register_event()
         for message in KafkaConsumer(*self._event_registry.keys(), **self._configs):
             self._get_event(message.topic, message.key).consume(message)
 
@@ -31,7 +31,7 @@ class ConsumerFramework:
     def include_router(self, router):
         self._routers.append(router)
 
-    def _register_router(self):
+    def _register_event(self):
         for topic, events in (router.registry.items() for router in self._routers):
             try:
                 self._event_registry[topic].update(events)

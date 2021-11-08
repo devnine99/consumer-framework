@@ -25,18 +25,19 @@ class ConsumerFramework:
     def config(self, **configs):
         self._configs.update(configs)
 
-    def event(self, *, topic, key, schema=None):
-        return self._router.event(topic=topic, key=key, schema=schema)
+    def event(self, *, topic, key):
+        return self._router.event(topic=topic, key=key)
 
     def include_router(self, router):
         self._routers.append(router)
 
     def _register_event(self):
-        for topic, events in (router.registry.items() for router in self._routers):
-            try:
-                self._event_registry[topic].update(events)
-            except KeyError:
-                self._event_registry[topic] = events
+        for router in self._routers:
+            for topic, events in router.registry.items():
+                try:
+                    self._event_registry[topic].update(events)
+                except KeyError:
+                    self._event_registry[topic] = events
 
     def _get_event(self, topic, key):
         try:

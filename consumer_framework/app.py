@@ -25,8 +25,8 @@ class ConsumerFramework:
     def config(self, **configs):
         self._configs.update(configs)
 
-    def event(self, *, topic, key):
-        return self._router.event(topic=topic, key=key)
+    def event(self, *, topic, key, schema=None):
+        return self._router.event(topic=topic, key=key, schema=schema)
 
     def include_router(self, router):
         self._routers.append(router)

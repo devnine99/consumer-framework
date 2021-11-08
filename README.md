@@ -22,9 +22,10 @@ class SomeSchema(BaseModel):
     description: str
 
 
-@app.event(topic='some_topic', key='some_key')
-def some_event(data: SomeSchema):
-    print(data) 
+@app.event(topic='some_topic', key='some_key', shcema=SomeSchema)
+def some_event(message, some: SomeSchema):
+    print(message.topic, message.key, message.value)
+    print(some)
 ```
 
 ## CONFIG

@@ -14,29 +14,18 @@ class Event:
     _consume = None
     _schema = None
 
-    def __init__(self, topic, key, consume=None):
+    def __init__(self, topic, key, consume=None, schema=None):
         self._topic = topic
         self._key = key
-        self._register_consume(consume)
+        self._consume = consume
+        self._schema = schema
         logger.info(f'Registered Event: {self._topic}, {self._key}')
 
     def consume(self, message):
-        self._consume(**{k: v.annotation(message.value) for k, v in signature(self._consume).parameters.items()})
-
-    def _register_consume(self, consume):
-        self._schema = self._validate_args(consume)
-        self._consume = consume
-
-    @staticmethod
-    def _validate_args(consume):
-        params = signature(consume).parameters
-        if len(params) > 1:
-            raise InvalidEventArgumentError()
-        if len(params) == 0:
-            return None
-        if BaseModel not in list(params.values())[0].annotation.mro():
-            raise InvalidEventArgumentError()
-        return list(params.values())[0].annotation
+        args = [message]
+        if self._schema:
+            args.append(self._schema(message.data))
+        self._consume(*args)
 
 
 class UndefinedEvent(Event):

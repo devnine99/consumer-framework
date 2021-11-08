@@ -36,6 +36,8 @@ jobs:
         if: steps.cache-venv.outputs.cache-hit != 'true'
 
       - name: Build
+        env:
+          VERSION: ${{ steps.vars.outputs.tag }}
         run: venv/bin/python setup.py bdist_wheel
 
       - name: Deploy

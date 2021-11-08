@@ -1,8 +1,12 @@
+import os
+
 from setuptools import setup
+
+VERSION = os.getenv('VERSION')
 
 setup(
     name='consumer-framework',
-    version='0.0.22',
+    version=VERSION,
     description='Consumer Framework',
     author='devnine99',
     author_email='devnine99@gmail.com',

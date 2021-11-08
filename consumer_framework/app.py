@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 class ConsumerFramework:
-    _configs: dict
+    _configs: dict = {}
     _event_registry: dict = {}
     _default_router = Router()
     _routers = [_default_router]
@@ -25,6 +25,9 @@ class ConsumerFramework:
     def config(self, **configs):
         self._configs.update(configs)
 
+    def event(self, *, topic, key, schema=None):
+        return self._default_router.event(topic=topic, key=key, schema=schema)
+
     def include_router(self, router):
         self._routers.append(router)
 
@@ -34,11 +37,7 @@ class ConsumerFramework:
                 try:
                     self._event_registry[topic].update(events)
                 except KeyError:
-                    self._event_registry[topic] = dict()
                     self._event_registry[topic] = events
-
-    def event(self, *, topic, key, schema=None):
-        return self._default_router.event(topic=topic, key=key, schema=schema)
 
     def _get_event(self, topic, key):
         try:

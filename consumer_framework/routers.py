@@ -21,6 +21,6 @@ class Router:
 
         @wraps(consume)
         def wrapped(*args, **kwargs):
-            pass
+            return consume(*args, **kwargs)
 
         return wrapped
